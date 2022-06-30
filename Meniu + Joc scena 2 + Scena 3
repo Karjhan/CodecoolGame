@@ -1,0 +1,539 @@
+var watcher;
+
+World.frameRate = 60;
+
+var scene = 1; //number of the scene
+
+var counter = 1; // counter so you can only press the mouse button once. e.g. you can only start once, chose one kid.
+
+var kid = 0; //this will memorize witch kid was chosen 1 for the boy and 2 for the girl
+
+var orient = 0; //variable for player orientation
+
+var plcounter = 1; //variable for what scene group should the player be in
+
+var cam = 1; //variable used to turn off and on the camera
+
+//creating the background of the first scene - the sudent's room
+var bg1 = createSprite(200, 200);
+bg1.setAnimation("scene1");
+bg1.scale = 1.3;
+
+//creating the menu
+//start game
+var start = createSprite(200, 200);
+start.setAnimation("start_button_1");
+
+//creating the players that you can choose
+var player1 = createSprite(100, 300);
+player1.setAnimation("GreenBoySt");
+
+var player2 = createSprite(300,300);
+player2.setAnimation("CowGirlSt");
+
+player1.scale = 0.35;
+player2.scale = 0.24;
+
+player1.visible = 0;
+player2.visible = 0; // players will become visible after you press the start button
+
+player1.setCollider("rectangle", -10, 0, 210, 300, 0); // reshaping the invisible rectangle so it maches 
+player2.setCollider("rectangle", -30, 0, 320, 500, 0);                                                          // the shape of the kids as best as possible
+
+//creating the sprite for the chosen player
+var player = createSprite(200,200);
+player.visible = 0;
+//creating sprites for scene 2;
+var bg2 = createSprite(200, 130);
+bg2.setAnimation("city_background");
+var ground = createSprite(200, 370);
+ground.setAnimation("ground");
+ground.width = 400;
+ground.height = 100;
+
+var cdpoint = createSprite(200, 200);
+cdpoint.setAnimation("codecool");
+cdpoint.scale = 0.1;
+cdpoint.x = 350;
+cdpoint.y = randomNumber(30, 340);
+
+var battery = createSprite(200,200);
+battery.setAnimation("3/3_health");
+battery.scale = 0.7;
+battery.x = 360;
+battery.y = 25;
+
+var obstacle1 = createSprite(200, 200);
+obstacle1.setAnimation("ladybug");
+obstacle1.scale = 0.15;
+obstacle1.x = 430;
+obstacle1.y = randomNumber(300, 350);
+
+
+var leave = createSprite(200,200);
+leave.setAnimation("open_door");
+leave.scale = 0.5;
+leave.x = 300;
+leave.y = 310;
+
+var soda = createSprite(200,200);
+soda.setAnimation("soda");
+soda.scale = 0.3;
+soda.x = 100;
+soda.y = 300;
+
+var leavebt = createSprite(297,180,105,50);
+var sodabt = createSprite(105,180,170,50);
+leavebt.setAnimation("over_button");
+leavebt.width = 105;
+leavebt.height = 135;
+sodabt.setAnimation("over_button");
+sodabt.width = 185;
+sodabt.height = 135;
+
+
+//variables for scene 2/4
+var codepoints = 0;
+var health = 3;
+var gamestate = 1;
+var timer = 6;
+
+//groups of sprites
+var group1 = createGroup();
+group1.add(bg1);
+group1.add(player1);
+group1.add(player2);
+group1.add(player);
+group1.add(start);
+
+var groupGame = createGroup();
+groupGame.add(player);
+groupGame.add(cdpoint);
+groupGame.add(battery);
+groupGame.add(obstacle1);
+
+var groupGameBg = createGroup();
+groupGameBg.add(bg2);
+groupGameBg.add(ground);
+
+var groupScreen = createGroup();
+groupScreen.add(leave);
+groupScreen.add(soda);
+groupScreen.add(leavebt);
+groupScreen.add(sodabt);
+//creating the edges of the screen
+createEdgeSprites();
+
+
+//scena 3
+var answered = 0;//maybe need a variable to know if the question is answered to stop the animation
+
+var aux1 = 0;//variable witch is true if the 1th box is picked
+var aux2 = 0;//variable witch is true if the second box is picked
+var aux3 = 0;//variable witch is true if the third box is picked
+var aux4 = 0;//variable witch is true if the 4th box is picked
+
+//creating the sprite for the background
+
+var scene3Group = createGroup();//group that helps us to change the displayed image(player, corina)
+var scene3GroupBg = createGroup();
+
+var scene3 = createSprite(200, 200);
+scene3.setAnimation("scene 3");
+//creating the sprite for corina 
+
+var Corina = createSprite(300, 350);
+Corina.setAnimation("Corina");
+Corina.scale = 0.3;
+Corina.debug = 1;
+
+//here we add the scene elements to a group
+scene3GroupBg.add(scene3);
+scene3Group.add(Corina);
+scene3Group.add(player);
+
+//creating the sprites for the question
+var questionGroup = createGroup();//this helps us to display the question slide
+
+var questionBackground = createSprite(200,200);// the background of the question slide
+var question = createSprite(200, 15);
+var image = createSprite(200,135);
+var finalAnswer = createSprite(200, 250);
+var answer1 = createSprite(50, 350);
+var answer2 = createSprite(150, 350);
+var answer3 = createSprite(250, 350);
+var answer4 = createSprite(350, 350);
+
+//adding the question sprites to the group
+questionGroup.add(question);
+questionGroup.add(image);
+questionGroup.add(finalAnswer);
+questionGroup.add(answer1);
+questionGroup.add(answer2);
+questionGroup.add(answer3);
+questionGroup.add(answer4);
+questionGroup.add(questionBackground);
+
+//adding the animations, change the name of the photos in the animation tab
+questionBackground.setAnimation("images.jpeg_1");
+question.setAnimation("question");
+image.setAnimation("image");
+answer1.setAnimation("answer1");
+answer2.setAnimation("answer2");
+answer3.setAnimation("answer3");
+answer4.setAnimation("answer4");
+finalAnswer.setAnimation("fill with answer");
+
+//rescaling the sprites so they fit the scene
+questionBackground.scale = 2.75;
+question.scale = 0.3;
+image.scale = 0.4;
+answer1.scale = 0.7;
+answer2.scale = 0.7;
+answer3.scale = 0.7;
+answer4.scale = 0.7;
+finalAnswer.scale = 0.7;
+
+///////scena 3
+
+
+
+
+
+
+
+
+function draw() {
+watcher = player.collide(leftEdge);
+//the code for the first scene
+if(scene == 1)
+{
+//the condition to start the game
+  if(mousePressedOver(start) && counter == 1) 
+  {
+    counter = 0; //counter makes the start pressing to only happen once
+    start.visible = 0; 
+    player1.visible = 1;    //the players that you can choose appear on screen
+    player2.visible = 1;
+  }
+//condition for the chosen player
+//the player sprite will become the chosen player
+  if(mousePressedOver(player1) && counter == 0)
+  {
+      counter = 2; //the counter makes this event only happen once
+      player2.visible = 0;//the second kid dissapears
+      player.setAnimation("GreenBoySt");//the first kid will be the main player from now on
+      player.x = 200;
+      player.y = 300;
+      player.setCollider("rectangle", -10, 0, 210, 300, 0);
+      player.visible = 1;
+      player1.visible = 0;
+      player.scale = 0.35;
+      kid = 1;// this will memorize that we are playing with the boy
+  }
+  else if(mousePressedOver(player2) && counter == 0)//see the comments from the if above
+  {
+      counter = 2; //the counter makes this event only happen once
+      player1.visible = 0;//
+      player.setAnimation("CowGirlSt");
+      player.x = 200;
+      player.y = 300;
+      player.setCollider("rectangle", -30, 0, 320, 500, 0);
+      player.visible = 1;
+      player2.visible = 0;
+      player.scale = 0.24;
+      kid = 2;
+  }
+
+  //testing if the player is reaching the edges of the screen
+  player.bounceOff(topEdge);
+  player.bounceOff(leftEdge);
+  player.bounceOff(bottomEdge);
+  
+  drawSprites(group1);
+  if (kid > 0  && player.x > 400 && plcounter == 1){
+  plcounter =0;
+  player.x = -5;
+  player.y = 300;
+  scene = 2;
+}
+
+
+
+}
+if(scene == 2){
+  //time and health variables
+  timer = timer - 0.015;
+  if (health == 2) {
+    battery.setAnimation("2/3_health");
+  }
+  if (health == 1) {
+    battery.setAnimation("1/3_health");
+  }
+  if (health == 0) {
+    battery.setAnimation("0/3_health");
+  }
+  if (health < 0) {
+    gamestate = 0;
+  }
+  
+  //interactions
+  obstacle1.velocityX = -2.5;
+  cdpoint.velocityX = -3;
+  if (player.isTouching(cdpoint)) {
+    codepoints = codepoints + 1;
+    cdpoint.x = 425;
+    cdpoint.y = randomNumber(30, 340);
+  }
+  if (player.isTouching(obstacle1)) {
+    if(player.x < 100){
+      obstacle1.bounceOff(player);
+      health = health -1;
+      obstacle1.height = 200;
+    }else{
+      player.bounceOff(obstacle1);
+      health = health -1;
+      obstacle1.height = 200;
+    }
+  } else{
+    obstacle1.height = 386;
+  }
+  
+  //looping
+  if (cdpoint.x < -10) {
+    cdpoint.x = 425;
+    cdpoint.y = randomNumber(30, 340);
+  }
+  if (obstacle1.x < -10) {
+    obstacle1.x = 425;
+    obstacle1.y = randomNumber(300, 350);
+  }
+  if(obstacle1.x > 430){
+    obstacle1.x = 425;
+    obstacle1.y = randomNumber(300, 350);
+    obstacle1.velocityX = -2.5;
+  }
+  
+  //edges
+  player.collide(leftEdge);
+  player.collide(topEdge);
+  player.collide(rightEdge);
+  if (player.y > 300) {
+    player.y = 300;
+  }
+  
+  //drawing the sprites
+  drawSprites(groupGame);
+  
+  //scoreboard
+  fill("lightgreen");
+  stroke("black");
+  strokeWeight(5);
+  textFont("Georgia");
+  textSize(20);
+  text("Health:", 255, 31);
+  fill("yellow");
+  text("Points:", 140, 31);
+  text(codepoints, 205, 31);
+  fill("red");
+  text("Time:", 10, 31);
+  text(Math.round(timer), 70, 30);
+  
+  //gamestate
+  if (gamestate == 0){
+    
+    background("black");
+    fill("lightblue");
+    stroke("red");
+    strokeWeight(5);
+    textFont("Courier New");
+    textSize(50);
+    text("Game Over!", 60, 80);
+    if (health < 0){
+      textSize(30);
+      text("You ran out of energy", 10, 120);
+    }
+    drawSprites(groupScreen);
+    fill("lightblue");
+    stroke("red");
+    strokeWeight(5);
+    textFont("Courier New");
+    textSize(13);
+    text("10POINTS FOR A DRINK", 25, 170);
+    text("POINTS:", 70, 190);
+    text(codepoints, 130, 190);
+    text("LEAVE GAME!", 255, 180);
+    if (mousePressedOver(leavebt)){
+      scene = 1;
+    }
+    if (mousePressedOver(sodabt) && codepoints >= 10){
+      codepoints = codepoints - 10;
+      health = 3;
+      gamestate = 1;
+    }
+  }
+  
+  if (gamestate == 1  && timer < 0){
+    obstacle1.x = 500;
+    obstacle1.velocityX = 0;
+    cdpoint.x = 500;
+    cdpoint.velocityX = 0;
+    timer = 0;
+    if(player.x > 350){
+      scene = 3;
+    }
+  }
+  
+}
+
+//movement is defined
+ if(keyDown("up")){
+    player.y = player.y - 5;
+    if (orient == 0){
+      if(kid == 1){player.setAnimation("GreenBoyJuRight");
+      }else{if(kid == 2){ player.setAnimation("CowGirlJuRight");}
+      }
+    }else{
+      if(kid == 1){player.setAnimation("GreenBoyJuLeft");
+      }else{if(kid == 2){player.setAnimation("CowGirlJuLeft");
+        
+        }
+      }
+    }
+  }
+  if(keyDown("down")){
+    player.y = player.y + 5;
+    if (orient == 0){
+      if(kid == 1){player.setAnimation("GreenBoyJuRight");
+      }else{if(kid == 2){ player.setAnimation("CowGirlJuRight");}
+      }
+    }else{
+      if(kid == 1){player.setAnimation("GreenBoyJuLeft");
+      }else{if(kid == 2){player.setAnimation("CowGirlJuLeft");
+        
+        }
+      }
+    }
+  }
+  if(keyDown("left")){
+    orient = 1;
+    player.x = player.x - 5;
+    if(kid == 1) player.setAnimation("GreenBoyRnLeft");//this helps to choose the animation depending of
+    else if(kid == 2) player.setAnimation("CowGirlRnLeft");//the player choice at the start of the game
+  }
+  if(keyDown("right")){
+    orient = 0;
+    player.x = player.x + 5;
+    if(kid == 1) player.setAnimation("GreenBoyRnRight");
+    else if(kid == 2) player.setAnimation("CowGirlRnRight");
+  }
+
+// insereaza codul pentru scena 3 (corina)
+//background("green");// the background for the question slide
+  
+if(scene == 3){
+  
+ drawSprites(scene3GroupBg);
+ //edges
+  player.collide(leftEdge);
+  player.collide(topEdge);
+  player.collide(rightEdge);
+  if (player.y > 300) {
+    player.y = 300;
+  }
+  
+ drawSprites(scene3Group);// the initial scene, corina and the player
+                          //the condition to enter the question slide
+ if (player.isTouching(Corina)){
+   player.x = 10;
+   player.y = 300;
+ }
+  if(player.isTouching(Corina) && answered == 0)
+  {
+   scene = 3.5; //this helps us to know that the question scene is displayed on the screen
+   drawSprites(questionGroup);// the question slide is displayed
+    
+  }
+}  
+  //this if prevents the objects to be moved during the initial scene
+  if(scene == 3.5 && answered == 0){
+    
+    if(mousePressedOver(answer1) && aux2 ==0 && aux3 == 0 && aux4 == 0){//moving the answer block no 1
+      answer1.x = World.mouseX;
+      answer1.y = World.mouseY;
+      aux1 = 1;//true if the mouse picks the first block
+    }else aux1 = 0;
+    if(mousePressedOver(answer2) && aux1 ==0 && aux3 == 0 && aux4 == 0){//moving the answer block no 2
+      answer2.x = World.mouseX;
+      answer2.y = World.mouseY;
+      aux2 = 1;//true if the mouse picks the second block
+    }else aux2 = 0;
+    if(mousePressedOver(answer3) && aux2 ==0 && aux1 == 0 && aux4 == 0){//moving the answer block no 3
+      answer3.x = World.mouseX;
+      answer3.y = World.mouseY;
+      aux3 = 1;//true if the mouse picks the third block
+      }else aux3 = 0;
+    if(mousePressedOver(answer4) && aux2 ==0 && aux3 == 0 && aux1 == 0){//moving the answer block no 4
+      answer4.x = World.mouseX;
+      answer4.y = World.mouseY;
+      aux4 = 1;//true if the mouse picks the 4th block
+     }else aux4 = 0;
+    
+    moveAnswer(answer1, 50, 350);
+    moveAnswer(answer2, 150, 350);
+    moveAnswer(answer3, 250, 350);
+    moveAnswer(answer4, 350, 350);
+   
+  }
+  
+ 
+ //answered = 1 means the question was answered and the initial scene reapear with your prize
+ if(answered == 1 && answer1.overlap(finalAnswer)){
+ fill("red");
+ textSize(50);
+  text("correct answer!", 50, 200);
+  }
+  //if you have chosen the wrong answer
+  else if(answered == 1 && (answer2.overlap(finalAnswer) || answer3.overlap(finalAnswer) || answer4.overlap(finalAnswer)))
+  {
+  fill("red");
+  textSize(50);
+  text("game over", 50, 200);
+  }
+ 
+
+
+// insereaza codul pentru scena 5 (gardian)
+if (scene == 5){
+  
+  
+  
+  
+}
+
+// insereaza codul pentru scena 6 (final)
+if (scene == 6){
+  
+  
+  
+  
+}
+}
+//this function tests if the answer is moved inside the final answer box,
+//or if the mouse key is released meaning it will make the block return to the initial posisiton
+function moveAnswer(choice, choicex, choicey)//choice is the selected bloc and the other arguments are the initial  
+{                                   //coordinates of the block
+  
+  if(choice.overlap(finalAnswer) && !mousePressedOver(choice)){
+   
+    choice.x = finalAnswer.x;// this will make the block fill the empty white block
+    choice.y = finalAnswer.y;
+    answered = 1; //this helps us exit the scene because if it's true it means the question was answered
+    }  
+    else if(!mousePressedOver(choice)){//if the key is released, the block will return to the initial position
+      choice.x = choicex;
+    choice.y = choicey;
+    }
+}
+
+
