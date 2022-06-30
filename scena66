@@ -1,0 +1,165 @@
+//messages
+var lose = "";
+var win = "";
+var mess = "";
+var welcome = "";
+var opt1 = "";
+var opt2 = "";
+var opt3 ="";
+var opt4="";
+
+//background
+var bg = createSprite(200, 200);
+bg.setAnimation("bg2.jpg_1");
+
+//mentor
+var mentor = createSprite(180, 250);
+mentor.setAnimation("mentor_boss");
+mentor.scale = 0.5;
+
+//bubblespeech
+var bubblespeech = createSprite(116, 128);
+bubblespeech.setAnimation("bubblespeech");
+bubblespeech.visible = false;
+bubblespeech.scale = 2;
+
+//background for the question
+var bg3 = createSprite(200, 200);
+bg3.visible = false;
+bg3.scale = 6;
+
+//creating the options
+var option1 = createSprite(80, 272);
+option1.visible = false;
+option1.scale = 0.50;
+var option2 = createSprite(80, 340);
+option2.scale = 0.5;
+option2.visible = false;
+var option3 = createSprite(308, 272);
+option3.scale = 0.5;
+option3.visible = false;
+var option4 = createSprite(310, 340);
+option4.scale = 0.5;
+option4.visible = false;
+
+
+var bg4 = createSprite(200, 200);
+bg4.visible = false;
+bg4.scale = 6;
+var bg5 = createSprite(200, 200);
+bg5.visible = false;
+bg5.scale = 6;
+
+
+function draw() {
+  drawSprites();
+  
+  fill("black");
+  textSize(15);
+  strokeWeight(3);
+  textAlign(CENTER, CENTER);
+  text(welcome, 107, 113);
+  
+  
+  fill("white");
+  textSize(30);
+  text(mess, 101, 54);
+  
+  // ??
+  fill("white");
+  textSize(30);
+  text(opt1, 200, 150);
+  text(opt2, 200, 150);
+  text(opt3, 200, 150);
+  text(opt4, 200, 150);
+  
+  
+  fill("white");
+  textSize(40);
+  text(win, 200, 200);
+  text(lose, 200, 200);
+  
+  if (keyDown("space")) {
+    bubblespeech.visible = true;
+    welcome = "Prepare yourself!";
+  }
+  
+  
+  if (mousePressedOver(mentor)) {
+    bg3.setAnimation("gradient_31_1");
+    bg3.visible = true;
+    bg4.visible = false;
+    bg5.visible = false;
+    win = "";
+    lose = "";
+    welcome = "";
+    mess = "Confirm Code:";
+    
+    option1.setAnimation("tn-3456.jpeg_1");
+    option1.visible = true;
+    option2.setAnimation("tn-5463.jpeg_1");
+    option2.visible = true;
+    option3.setAnimation("tn-3645.jpeg_1");
+    option3.visible = true;
+    option4.setAnimation("tn-6453.jpeg_1");
+    option4.visible = true;
+  }
+  
+    if (mousePressedOver(option1)) {
+    welcome = "";
+    opt2 = "";
+    opt3 = "";
+    opt4 = "";
+    opt1 = 3456;
+    bg5.setAnimation("gradient_11_1");
+    bg5.visible = true;
+    bg4.visible = false;
+    win = "";
+    mess = "";
+    lose = "80% Attendance";
+  }
+  
+  if (mousePressedOver(option2)) {
+    opt1 = "";
+    welcome = "";
+    opt3 = "";
+    opt4 = "";
+    opt2 = 5463;
+    bg5.setAnimation("gradient_11_1");
+    bg5.visible = true;
+    bg4.visible = false;
+    win = "";
+    mess = "";
+    lose = "80% Attendance";
+  }
+  
+  if (mousePressedOver(option3)) {
+    opt1 = "";
+    opt2 = "";
+    welcome = "";
+    opt3 = 3645;
+    opt4 = "";
+    bg4.setAnimation("gradient_2");
+    bg4.visible = true;
+    bg5.visible = false;
+    win = "Victory!";
+    lose = "";
+    mess = "";
+  }
+  
+  if (mousePressedOver(option4)) {
+    opt1="";
+    opt2="";
+    opt3="";
+    welcome = "";
+    opt4=6453;
+    bg5.setAnimation("gradient_11_1");
+    bg5.visible = true;
+    bg4.visible = false;
+    win = "";
+    mess = "";
+    lose = "80% Attendance";
+  }
+  
+
+}
