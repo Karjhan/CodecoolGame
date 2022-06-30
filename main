@@ -1,2 +1,24 @@
-dsfd
-pr
+var moveForward = 0
+var cha = createSprite(249, 194);
+cha.setAnimation("blue_shirt2_1");
+cha.scale = 0.25;
+cha.x = 100;
+drawSprites();
+var us = createSprite(100, 200);
+us.setAnimation("Us_1");
+us.scale = 0.25;
+us.x = 100;
+textAlign("Good morning!",105,137)
+moveForward = moveForward + 1;
+function draw() {
+  background("us2_3");
+  drawSprites();
+  text("Welcome", 260, 149);
+  textSize(22);
+  drawSprites();
+  us.x = 260;
+  if (keyDown('left'))
+  var cha = cha + 1
+  drawSprites()
+}
+
