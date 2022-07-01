@@ -66,7 +66,14 @@ obstacle1.setAnimation("ladybug");
 obstacle1.scale = 0.15;
 obstacle1.x = 430;
 obstacle1.y = randomNumber(300, 350);
+obstacle1.setCollider("circle");
 
+var obstacle2 = createSprite(200, 200);
+obstacle2.setAnimation("clock");
+obstacle2.scale = 0.045;
+obstacle2.x = 600;
+obstacle2.y = randomNumber(50, 100);
+obstacle2.setCollider("circle");
 
 var leave = createSprite(200,200);
 leave.setAnimation("open_door");
@@ -109,6 +116,7 @@ groupGame.add(player);
 groupGame.add(cdpoint);
 groupGame.add(battery);
 groupGame.add(obstacle1);
+groupGame.add(obstacle2);
 
 var groupGameBg = createGroup();
 groupGameBg.add(bg2);
@@ -261,6 +269,14 @@ option4.setCollider("rectangle",0,0,117,41);
 
 
 
+
+
+
+
+
+
+
+
 function draw() {
 watcher = player.collide(leftEdge);
 //the code for the first scene
@@ -338,6 +354,7 @@ if(scene == 2){
   
   //interactions
   obstacle1.velocityX = -2.5;
+  obstacle2.velocityX = -2.7;
   cdpoint.velocityX = -3;
   if (player.isTouching(cdpoint)) {
     codepoints = codepoints + 1;
@@ -345,17 +362,17 @@ if(scene == 2){
     cdpoint.y = randomNumber(30, 340);
   }
   if (player.isTouching(obstacle1)) {
-    if(player.x < 100){
-      obstacle1.bounceOff(player);
-      health = health -1;
-      obstacle1.height = 200;
-    }else{
-      player.bounceOff(obstacle1);
-      health = health -1;
-      obstacle1.height = 200;
-    }
+    health = health - 1;
+    obstacle1.x = 425;
+    obstacle1.y = randomNumber(300, 350);
+    obstacle1.height = 200;
   } else{
     obstacle1.height = 386;
+  }
+  if (player.isTouching(obstacle2)) {
+    health = health - 1;
+    obstacle2.x = 600;
+    obstacle2.y = randomNumber(50, 100);
   }
   
   //looping
@@ -371,6 +388,10 @@ if(scene == 2){
     obstacle1.x = 425;
     obstacle1.y = randomNumber(300, 350);
     obstacle1.velocityX = -2.5;
+  }
+  if (obstacle2.x < -10) {
+    obstacle2.x = 600;
+    obstacle2.y = randomNumber(50, 100);
   }
   
   //edges
@@ -400,7 +421,12 @@ if(scene == 2){
   
   //gamestate
   if (gamestate == 0){
-    
+    obstacle1.x = 600;
+    obstacle1.velocityX = 0;
+    obstacle2.x = 600;
+    obstacle2.velocityX = 0;
+    cdpoint.x = 600;
+    cdpoint.velocityX = 0;
     background("black");
     fill("lightblue");
     stroke("red");
@@ -433,9 +459,11 @@ if(scene == 2){
   }
   
   if (gamestate == 1  && timer < 0){
-    obstacle1.x = 500;
+    obstacle1.x = 600;
     obstacle1.velocityX = 0;
-    cdpoint.x = 500;
+    obstacle2.x = 600;
+    obstacle2.velocityX = 0;
+    cdpoint.x = 600;
     cdpoint.velocityX = 0;
     timer = 0;
     if(player.x > 350){
@@ -556,13 +584,12 @@ if(scene == 3){
   text("game over", 50, 200);
   }
   if(answered == 1 && player.x > 350){
-    scene = 6;
+    scene = 6
   }
 
 
 // insereaza codul pentru scena 5 (gardian)
 if (scene == 5){
-  
   
   
   
